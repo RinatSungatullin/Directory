@@ -12,6 +12,9 @@ public class Position
 
   public Position(Guid id, string name)
   {
+    if (id == Guid.Empty)
+      throw new InvalidDataException(nameof(id));
+    
     if (string.IsNullOrEmpty(name))
       throw new InvalidDataException( nameof(name));
     

@@ -4,7 +4,7 @@ namespace DirectoryService.Domain.Departments;
 
 public class Department
 {
-  public Guid? Id { get; }
+  public Guid Id { get; }
   
   public string? Name { get; private set; }
   
