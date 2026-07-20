@@ -1,8 +1,10 @@
-﻿namespace DirectoryService.Domain.Departments;
+﻿using System.Text.RegularExpressions;
+
+namespace DirectoryService.Domain.Departments;
 
 public class Department
 {
-  public Guid? Id { get; }
+  public Guid Id { get; }
   
   public string? Name { get; private set; }
   
@@ -27,16 +29,21 @@ public class Department
   public Department(Guid id, string name, string slug, string path, Guid parentId,
                     IEnumerable<DepartmentPosition> positions, IEnumerable<DepartmentLocation> locations )
   { 
-    if (id == Guid.Empty)
-      throw new InvalidDataException(nameof(id));
-      
     if (string.IsNullOrEmpty(name))
       throw new InvalidDataException( nameof(name));
     
-    if (string.IsNullOrEmpty(slug))
-      throw new InvalidDataException( nameof(slug));
+    if (string.IsNullOrEmpty(slug) ||
+      !Regex.IsMatch(
+          slug,
+          @"^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          RegexOptions.None,
+          TimeSpan.FromMilliseconds(100)))
+    {
+      throw new ArgumentException("Invalid slug", nameof(slug));
+    }
     
-    if (string.IsNullOrEmpty(path))
+    if (string.IsNullOrEmpty(path) ||
+        !path.EndsWith($"/{slug}", StringComparison.Ordinal))
       throw new InvalidDataException( nameof(path));
     
     if (parentId == Guid.Empty)

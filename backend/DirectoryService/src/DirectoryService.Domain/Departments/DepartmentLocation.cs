@@ -2,7 +2,7 @@
 
 public class DepartmentLocation
 {
-  public Guid? Id { get; }
+  public Guid Id { get; }
   
   public Guid? DepartmentId { get; private set; }
   
