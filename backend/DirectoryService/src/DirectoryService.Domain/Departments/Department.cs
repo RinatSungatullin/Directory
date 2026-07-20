@@ -26,7 +26,7 @@ public class Department
 
   public IReadOnlyCollection<DepartmentPosition> Positions => _positions;
   
-  public Department(Guid id, string name, string slug, string path, Guid parentId,
+  public Department(Guid id, string name, string slug, string path, Guid? parentId,
                     IEnumerable<DepartmentPosition> positions, IEnumerable<DepartmentLocation> locations )
   { 
     if (string.IsNullOrEmpty(name))
