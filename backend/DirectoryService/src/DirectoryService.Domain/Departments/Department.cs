@@ -46,9 +46,6 @@ public class Department
         !path.EndsWith($"/{slug}", StringComparison.Ordinal))
       throw new InvalidDataException( nameof(path));
     
-    if (parentId == Guid.Empty)
-      throw new InvalidDataException(nameof(parentId));
-    
     this.Id = id;
     
     this.Name = name;
