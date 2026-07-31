@@ -12,7 +12,8 @@ public class PositionConfiguration : IEntityTypeConfiguration<Position>
     
     builder.HasKey(p => p.Id).HasName("pk_positions");
     
-    builder.Property(p => p.Id).HasColumnName("position_id");
+    builder.Property(p => p.Id).HasColumnName("id");
+    
     
     builder.HasIndex(p => p.Name).IsUnique();
     

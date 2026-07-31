@@ -61,8 +61,6 @@ public class Department
     this.CreatedAt = DateTime.UtcNow;
     
     this.UpdatedAt = DateTime.UtcNow;
-    
-    
   }
   
   private Department()
