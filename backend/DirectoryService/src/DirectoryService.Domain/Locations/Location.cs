@@ -3,10 +3,10 @@
 public class Location
 {
   public Guid Id { get; }
+
+  public string Name { get; private set; } = null!;
   
-  public string? Name { get; private set; }
-  
-  public string? Address { get; private set; }
+  public string Address { get; private set; } = null!;
   
   public DateTime? CreatedAt { get; private set; }
   
@@ -34,4 +34,6 @@ public class Location
 
     this.UpdatedAt = DateTime.UtcNow;
   }
+  public Location()
+  { }
 }

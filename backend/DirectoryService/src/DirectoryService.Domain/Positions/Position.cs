@@ -2,11 +2,11 @@
 
 public class Position
 {
-  public Guid Id { get; }
+  public Guid Id { get; private set; }
   
-  public string? Name { get; private set; }
+  public string Name { get; private set; } = null!;
   
-  public DateTime? CreatedAt { get; private set; }
+  public DateTime CreatedAt { get; private set; }
   
   public DateTime? UpdatedAt { get; private set; }
 
@@ -26,4 +26,7 @@ public class Position
     
     this.UpdatedAt = DateTime.UtcNow;
   }
+
+  public Position()
+  { }
 }

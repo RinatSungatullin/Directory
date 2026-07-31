@@ -14,20 +14,19 @@ public class Department
   
   public Guid? ParentId { get; private set; }
   
-  public DateTime? CreatedAt { get; private set; }
+  public DateTime CreatedAt { get; private set; }
   
-  public DateTime? UpdatedAt { get; private set; }
+  public DateTime UpdatedAt { get; private set; }
   
-  private readonly List<DepartmentLocation> _locations;
+  private readonly List<DepartmentLocation> _locations = [];
   
-  private readonly List<DepartmentPosition> _positions;
+  private readonly List<DepartmentPosition> _positions = [];
 
   public IReadOnlyCollection<DepartmentLocation> Locations => _locations;
 
   public IReadOnlyCollection<DepartmentPosition> Positions => _positions;
   
-  public Department(Guid id, string name, string slug, string path, Guid? parentId,
-                    IEnumerable<DepartmentPosition> positions, IEnumerable<DepartmentLocation> locations )
+  public Department(Guid id, string name, string slug, string path, Guid? parentId)
   { 
     if (string.IsNullOrEmpty(name))
       throw new InvalidDataException( nameof(name));
@@ -62,9 +61,10 @@ public class Department
     this.CreatedAt = DateTime.UtcNow;
     
     this.UpdatedAt = DateTime.UtcNow;
+  }
+  
+  private Department()
+  {
     
-    this._positions = positions.ToList();
-    
-    this._locations = locations.ToList();
   }
 }

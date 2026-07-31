@@ -2,7 +2,7 @@
 
 public class DepartmentPosition
 {
-  public Guid Id { get; }
+  public Guid Id { get; private set; }
   
   public Guid DepartmentId { get; private set; }
   
@@ -25,4 +25,7 @@ public class DepartmentPosition
     
     this.PositionId = positionId;
   }
+  
+  private DepartmentPosition()
+  { }
 }
