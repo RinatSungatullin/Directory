@@ -19,6 +19,9 @@ public class DepartmentLocationConfiguration : IEntityTypeConfiguration<Departme
       .HasColumnName("department_id")
       .IsRequired();
 
+    builder.Property(dl => dl.LocationId)
+      .HasColumnName("location_id");
+
     builder.HasOne<Department>()
       .WithMany(dl => dl.Locations)
       .HasForeignKey(dl => dl.DepartmentId);

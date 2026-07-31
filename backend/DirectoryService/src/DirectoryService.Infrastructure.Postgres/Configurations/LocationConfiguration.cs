@@ -21,8 +21,6 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
       .HasColumnName("name")
       .HasMaxLength(100);
     
-    builder.HasIndex(l => l.Address).IsUnique();
-    
     builder.Property(l => l.Address)
       .HasColumnName("address")
       .HasMaxLength(100);
