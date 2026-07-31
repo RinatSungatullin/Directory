@@ -8,6 +8,7 @@
   <ItemGroup>
     <!-- HTTP / OpenAPI -->
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3" />
     <PackageVersion Include="Microsoft.OpenApi" Version="2.10.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.16.11" />

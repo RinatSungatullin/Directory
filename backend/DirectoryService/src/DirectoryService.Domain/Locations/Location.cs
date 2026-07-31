@@ -34,4 +34,6 @@ public class Location
 
     this.UpdatedAt = DateTime.UtcNow;
   }
+  public Location()
+  { }
 }
