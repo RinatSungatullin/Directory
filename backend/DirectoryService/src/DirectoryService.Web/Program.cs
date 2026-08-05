@@ -19,6 +19,8 @@ var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
 
+app.UseRouting();
+
 app.MapControllers();
 
 app.MapHealthChecks("/api/health");
