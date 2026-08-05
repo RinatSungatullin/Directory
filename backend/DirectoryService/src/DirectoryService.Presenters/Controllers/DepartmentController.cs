@@ -19,7 +19,7 @@ public class DepartmentController : ControllerBase
   }
 
   /// <summary>
-  /// Получить позицию по id.
+  /// Получить отдел по id.
   /// </summary>
   /// <param name="positionId">Id позиции.</param>
   /// <returns>Result.</returns>

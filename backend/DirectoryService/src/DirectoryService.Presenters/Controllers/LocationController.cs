@@ -1,7 +1,7 @@
 using DirectoryService.Contracts.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DirectoryService.Web.Controllers;
+namespace DirectoryService.Presenters.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -23,7 +23,7 @@ public class LocationController : ControllerBase
   /// </summary>
   /// <param name="locationId">Id локации.</param>
   /// <returns>Result.</returns>
-  [HttpGet("{location:guid}")]
+  [HttpGet("{locationId:guid}")]
   public async Task<IActionResult> GetById([FromRoute] Guid locationId)
   {
     return Ok("location retrieved");
