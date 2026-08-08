@@ -1,4 +1,6 @@
 using DirectoryService.Contracts.Dtos;
+using DirectoryService.Core;
+using DirectoryService.Core.Locations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DirectoryService.Presenters.Controllers;
@@ -7,6 +9,13 @@ namespace DirectoryService.Presenters.Controllers;
 [Route("[controller]")]
 public class LocationController : ControllerBase
 {
+  private readonly LocationService _locationService;
+  
+  public LocationController(LocationService locationService)
+  {
+    this._locationService = locationService;
+  }
+  
   /// <summary>
   /// Создать локацию.
   /// </summary>
@@ -15,7 +24,9 @@ public class LocationController : ControllerBase
   [HttpPost]
   public async Task<IActionResult> Create([FromBody] CreateLocationDto locationDto)
   {
-    return Ok("location created");
+    Guid locationId = await this._locationService.SaveAsync(locationDto);
+    
+    return Ok(locationId);
   }
 
   /// <summary>
