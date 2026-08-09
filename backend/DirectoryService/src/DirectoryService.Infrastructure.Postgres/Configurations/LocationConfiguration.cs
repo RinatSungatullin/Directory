@@ -20,10 +20,31 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
     builder.Property(l => l.Name)
       .HasColumnName("name")
       .HasMaxLength(100);
-    
-    builder.Property(l => l.Address)
-      .HasColumnName("address")
-      .HasMaxLength(100);
+
+    builder.OwnsOne(l => l.Address, a =>
+    {
+      a.Property(l => l.City)
+        .HasColumnName("city")
+        .HasMaxLength(100)
+        .IsRequired();
+      
+      a.Property(l => l.Street)
+        .HasColumnName("street")
+        .HasMaxLength(100)
+        .IsRequired();
+      
+      a.Property(l => l.Building)
+        .HasColumnName("building")
+        .HasMaxLength(100)
+        .IsRequired();
+      
+      a.Property(l => l.OfficeNumber)
+        .HasColumnName("office_number")
+        .HasMaxLength(5)
+        .IsRequired();
+    });
+
+    builder.Navigation(l => l.Address).IsRequired();
 
     builder.Property(l => l.CreatedAt)
       .HasColumnName("created_at");

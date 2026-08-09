@@ -12,5 +12,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DirectoryService.Contracts\DirectoryService.Contracts.csproj" />
+      <ProjectReference Include="..\DirectoryService.Core\DirectoryService.Core.csproj" />
     </ItemGroup>
 </Project>
