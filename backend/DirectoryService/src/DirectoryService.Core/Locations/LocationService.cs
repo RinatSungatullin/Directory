@@ -37,10 +37,10 @@ public class LocationService
     
     Guid newLocationId = Guid.NewGuid();
 
-    Address address = new Address(locationDto.Address.City,
-                                  locationDto.Address.Street,
-                                  locationDto.Address.Building,
-                                  locationDto.Address.OfficeNumber);
+    Address address = Address.Create(locationDto.Address.City,
+                                      locationDto.Address.Street,
+                                      locationDto.Address.Building,
+                                      locationDto.Address.OfficeNumber);
     
     Location location = new Location(newLocationId, locationDto.Name, address);
     

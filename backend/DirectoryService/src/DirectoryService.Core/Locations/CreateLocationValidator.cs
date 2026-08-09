@@ -34,7 +34,7 @@ public class CreateLocationValidator : AbstractValidator<CreateLocationDto>
     RuleFor(x => x.Address.OfficeNumber)
       .NotNull()
       .NotEmpty()
-      .MaximumLength(10)
+      .MaximumLength(5)
       .WithMessage("Адрес некорректен");
   }
 }
