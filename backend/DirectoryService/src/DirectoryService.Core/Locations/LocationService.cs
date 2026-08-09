@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using DirectoryService.Contracts.Dtos;
+using DirectoryService.Domain.Addresses;
 using DirectoryService.Domain.Locations;
 
 namespace DirectoryService.Core.Locations;
@@ -29,14 +30,19 @@ public class LocationService
     
     Guid existsLocation = await this._locationRepository.GetLocationByName(locationDto.Name);
 
-    if (existsLocation == Guid.Empty)
+    if (existsLocation != Guid.Empty)
     {
       throw new InvalidDataException("Имя уже существует");
     }
     
     Guid newLocationId = Guid.NewGuid();
+
+    Address address = new Address(locationDto.Address.City,
+                                  locationDto.Address.Street,
+                                  locationDto.Address.Building,
+                                  locationDto.Address.OfficeNumber);
     
-    Location location = new Location(newLocationId, locationDto.Name, locationDto.Address);
+    Location location = new Location(newLocationId, locationDto.Name, address);
     
     await this._locationRepository.AddAsync(location);
     

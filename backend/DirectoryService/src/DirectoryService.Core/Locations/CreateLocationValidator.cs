@@ -13,10 +13,28 @@ public class CreateLocationValidator : AbstractValidator<CreateLocationDto>
       .MaximumLength(50)
       .WithMessage("Имя некорректно");
     
-    RuleFor(x => x.Address)
+    RuleFor(x => x.Address.City)
       .NotNull()
       .NotEmpty()
       .MaximumLength(100)
+      .WithMessage("Адрес некорректен");
+    
+    RuleFor(x => x.Address.Street)
+      .NotNull()
+      .NotEmpty()
+      .MaximumLength(100)
+      .WithMessage("Адрес некорректен");
+    
+    RuleFor(x => x.Address.Building)
+      .NotNull()
+      .NotEmpty()
+      .MaximumLength(100)
+      .WithMessage("Адрес некорректен");
+    
+    RuleFor(x => x.Address.OfficeNumber)
+      .NotNull()
+      .NotEmpty()
+      .MaximumLength(10)
       .WithMessage("Адрес некорректен");
   }
 }
