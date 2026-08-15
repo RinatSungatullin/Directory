@@ -8,6 +8,7 @@ namespace DirectoryService.Infrastructure.Postgres.Database;
 public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable
 {
   private readonly NpgsqlDataSource _dataSource;
+  private bool _disposed;
 
   public NpgSqlConnectionFactory(IConfiguration configuration, ILoggerFactory loggerFactory)
   {
@@ -23,33 +24,35 @@ public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable
     return await _dataSource.OpenConnectionAsync();
   }
 
+
   public void Dispose()
   {
     Dispose(true);
-    
     GC.SuppressFinalize(this);
   }
 
   protected virtual void Dispose(bool disposing)
   {
+    if (_disposed)
+      return;
+
     if (disposing)
     {
-      this._dataSource.Dispose();
+      _dataSource.Dispose();
     }
+
+    _disposed = true;
   }
 
   public async ValueTask DisposeAsync()
   {
-    DisposeAsync(true);
-    
+    if (_disposed)
+      return;
+
+    await _dataSource.DisposeAsync();
+
+    _disposed = true;
+
     GC.SuppressFinalize(this);
-  }
-  
-  protected virtual void DisposeAsync(bool disposing)
-  {
-    if (disposing)
-    {
-      this._dataSource.Dispose();
-    }
   }
 }

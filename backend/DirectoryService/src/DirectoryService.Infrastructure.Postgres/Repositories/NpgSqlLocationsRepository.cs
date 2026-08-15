@@ -65,11 +65,11 @@ public class NpgSqlLocationsRepository : ILocationsRepository
     using var connection = await this._connectionFactory.CreateConnection();
 
     const string locationGetByNameSql = """
-                                        SELECT * FROM locations
+                                        SELECT id FROM locations
                                         WHERE name = @Name
                                      """;
     
-    var id = await connection.QueryFirstOrDefaultAsync<Guid?>(
+    var id = await connection.QuerySingleOrDefaultAsync<Guid?>(
       locationGetByNameSql,
       new { Name = name });
 

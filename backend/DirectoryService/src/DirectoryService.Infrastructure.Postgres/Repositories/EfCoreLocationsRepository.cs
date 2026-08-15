@@ -40,7 +40,7 @@ public class EfCoreLocationsRepository : ILocationsRepository
 
   public async Task<Guid?> GetLocationByName(string name)
   {
-    var locationId = await this._dbContext.Location
+    var locationId = await this._dbContext.Set<Location>()
       .Where(l => l.Name == name)
       .Select(l => (Guid?)l.Id)
       .FirstOrDefaultAsync();
