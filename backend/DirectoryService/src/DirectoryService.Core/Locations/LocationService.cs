@@ -7,14 +7,14 @@ namespace DirectoryService.Core.Locations;
 
 public class LocationService
 {
-  private readonly ILocationRepository _locationRepository;
+  private readonly ILocationsRepository _locationsRepository;
   
   private readonly CreateLocationValidator _createLocationValidator;
   
-  public LocationService(ILocationRepository locationRepository,
+  public LocationService(ILocationsRepository locationsRepository,
                           CreateLocationValidator createLocationValidator)
   {
-    this._locationRepository = locationRepository;
+    this._locationsRepository = locationsRepository;
     
     this._createLocationValidator = createLocationValidator;
   }
@@ -28,7 +28,7 @@ public class LocationService
       throw new ValidationException(validationResult.Errors.ToString());
     }
     
-    Guid existsLocation = await this._locationRepository.GetLocationByName(locationDto.Name);
+    Guid existsLocation = await this._locationsRepository.GetLocationByName(locationDto.Name);
 
     if (existsLocation != Guid.Empty)
     {
@@ -44,7 +44,7 @@ public class LocationService
     
     Location location = new Location(newLocationId, locationDto.Name, address);
     
-    await this._locationRepository.AddAsync(location);
+    await this._locationsRepository.AddAsync(location);
     
     return newLocationId;
   }

@@ -2,6 +2,7 @@
 using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.Positions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace DirectoryService.Infrastructure.Postgres;
 
@@ -21,6 +22,8 @@ public class DirectoryServiceDbContext : DbContext
     : base(options)
   { }
   
+  
+  
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     modelBuilder.ApplyConfigurationsFromAssembly(
@@ -28,4 +31,7 @@ public class DirectoryServiceDbContext : DbContext
 
     base.OnModelCreating(modelBuilder);
   }
+  
+  public static ILoggerFactory CreateLoggerFactory() =>
+    LoggerFactory.Create(builder => builder.AddConsole());
 }

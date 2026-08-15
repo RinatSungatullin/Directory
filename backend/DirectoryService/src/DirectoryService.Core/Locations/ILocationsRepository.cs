@@ -2,7 +2,7 @@ using DirectoryService.Domain.Locations;
 
 namespace DirectoryService.Core.Locations;
 
-public interface ILocationRepository
+public interface ILocationsRepository
 {
   Task<Guid> AddAsync(Location location);
   
