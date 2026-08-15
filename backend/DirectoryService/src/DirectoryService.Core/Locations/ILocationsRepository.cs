@@ -12,5 +12,5 @@ public interface ILocationsRepository
   
   Task<Guid> DeleteAsync(Guid locationId);
   
-  Task<Guid> GetLocationByName(string name);
+  Task<Guid?> GetLocationByName(string name);
 }

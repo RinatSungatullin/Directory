@@ -26,6 +26,7 @@ public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable
   public void Dispose()
   {
     Dispose(true);
+    
     GC.SuppressFinalize(this);
   }
 
@@ -39,8 +40,16 @@ public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable
 
   public async ValueTask DisposeAsync()
   {
-    Dispose(true);
+    DisposeAsync(true);
     
     GC.SuppressFinalize(this);
+  }
+  
+  protected virtual void DisposeAsync(bool disposing)
+  {
+    if (disposing)
+    {
+      this._dataSource.Dispose();
+    }
   }
 }

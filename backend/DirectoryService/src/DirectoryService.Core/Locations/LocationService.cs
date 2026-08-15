@@ -28,9 +28,9 @@ public class LocationService
       throw new ValidationException(validationResult.Errors.ToString());
     }
     
-    Guid existsLocation = await this._locationsRepository.GetLocationByName(locationDto.Name);
+    Guid? existsLocation = await this._locationsRepository.GetLocationByName(locationDto.Name);
 
-    if (existsLocation != Guid.Empty)
+    if (existsLocation.HasValue)
     {
       throw new InvalidDataException("Имя уже существует");
     }

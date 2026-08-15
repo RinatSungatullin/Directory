@@ -60,8 +60,19 @@ public class NpgSqlLocationsRepository : ILocationsRepository
     throw new DataException();
   }
 
-  public async Task<Guid> GetLocationByName(string name)
+  public async Task<Guid?> GetLocationByName(string name)
   {
-    return Guid.Empty;
+    using var connection = await this._connectionFactory.CreateConnection();
+
+    const string locationGetByNameSql = """
+                                        SELECT * FROM locations
+                                        WHERE name = @Name
+                                     """;
+    
+    var id = await connection.QueryFirstOrDefaultAsync<Guid?>(
+      locationGetByNameSql,
+      new { Name = name });
+
+    return id;
   }
 }

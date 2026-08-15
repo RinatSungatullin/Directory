@@ -1,6 +1,7 @@
 using System.Data;
 using DirectoryService.Core.Locations;
 using DirectoryService.Domain.Locations;
+using Microsoft.EntityFrameworkCore;
 
 namespace DirectoryService.Infrastructure.Postgres.Repositories;
 
@@ -37,9 +38,13 @@ public class EfCoreLocationsRepository : ILocationsRepository
     throw new DataException();
   }
 
-  public async Task<Guid> GetLocationByName(string name)
+  public async Task<Guid?> GetLocationByName(string name)
   {
-    return Guid.Empty;
-    
+    var locationId = await this._dbContext.Location
+      .Where(l => l.Name == name)
+      .Select(l => (Guid?)l.Id)
+      .FirstOrDefaultAsync();
+
+    return locationId;
   }
 }
