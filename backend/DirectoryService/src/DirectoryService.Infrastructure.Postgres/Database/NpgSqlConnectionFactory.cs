@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -5,7 +6,7 @@ using Npgsql;
 
 namespace DirectoryService.Infrastructure.Postgres.Database;
 
-public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable
+public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable, IDbConnectionFactory
 {
   private readonly NpgsqlDataSource _dataSource;
   private bool _disposed;
@@ -19,11 +20,10 @@ public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable
     this._dataSource = dataSourceBuilder.Build();
   }
 
-  public async Task<NpgsqlConnection> CreateConnection()
+  public async Task<IDbConnection> AddCreationAsync()
   {
     return await _dataSource.OpenConnectionAsync();
   }
-
 
   public void Dispose()
   {
@@ -55,4 +55,5 @@ public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable
 
     GC.SuppressFinalize(this);
   }
+
 }

@@ -8,16 +8,16 @@ namespace DirectoryService.Infrastructure.Postgres.Repositories;
 
 public class NpgSqlLocationsRepository : ILocationsRepository
 {
-  private readonly NpgSqlConnectionFactory _connectionFactory;
+  private readonly IDbConnectionFactory _connectionFactory;
 
-  public NpgSqlLocationsRepository(NpgSqlConnectionFactory factory)
+  public NpgSqlLocationsRepository(IDbConnectionFactory factory)
   {
     this._connectionFactory = factory;
   }
   
-  public async Task<Guid> AddAsync(Location location)
+  public async Task<Guid> AddAsync(Location location, CancellationToken cancellationToken = default)
   {
-    using var connection = await this._connectionFactory.CreateConnection();
+    using var connection = await this._connectionFactory.AddCreationAsync();
 
     const string locationInsertSql = """
                                         INSERT INTO locations (
@@ -45,24 +45,24 @@ public class NpgSqlLocationsRepository : ILocationsRepository
     return location.Id;
   }
 
-  public async Task<Location> GetByIdAsync(Guid locationId)
+  public async Task<Location> GetByIdAsync(Guid locationId, CancellationToken cancellationToken = default)
   {
     throw new DataException();
   }
 
-  public async Task<Guid> UpdateAsync(Location location)
+  public async Task<Guid> UpdateAsync(Location location, CancellationToken cancellationToken = default)
   {
     throw new DataException();
   }
 
-  public async Task<Guid> DeleteAsync(Guid locationId)
+  public async Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken = default)
   {
     throw new DataException();
   }
 
-  public async Task<Guid?> GetLocationByName(string name)
+  public async Task<Guid?> GetLocationByName(string name, CancellationToken cancellationToken = default)
   {
-    using var connection = await this._connectionFactory.CreateConnection();
+    using var connection = await this._connectionFactory.AddCreationAsync();
 
     const string locationGetByNameSql = """
                                         SELECT id FROM locations

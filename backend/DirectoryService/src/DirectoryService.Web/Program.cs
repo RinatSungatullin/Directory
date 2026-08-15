@@ -38,11 +38,12 @@ switch (defaultRepository)
   }
   default:
   {
-    throw new DataException();
+    builder.Services.AddScoped<ILocationsRepository, EfCoreLocationsRepository>();
+    break;
   }
 }
 
-builder.Services.AddScoped<NpgSqlConnectionFactory>();
+builder.Services.AddScoped<IDbConnectionFactory, NpgSqlConnectionFactory>();
 
 builder.Services.AddScoped<CreateLocationValidator>();
 
