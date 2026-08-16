@@ -45,12 +45,28 @@ public class NpgSqlLocationsRepository : ILocationsRepository
     return location.Id;
   }
 
-  public async Task<Location> GetByIdAsync(Guid locationId, CancellationToken cancellationToken = default)
+  public async Task<IEnumerable<Location>> GetAllAsync(CancellationToken cancellationToken = default)
+  {
+    using var connection = await this._connectionFactory.AddCreationAsync();
+
+    const string locationGetAllSql = """
+                                           SELECT * FROM locations
+                                        """;
+    
+    var location = new Location();
+    
+    var id = await connection
+      .QueryAsync<Location>(locationGetAllSql, location);
+      
+    return id;
+  }
+
+  public async Task<Location?> GetByIdAsync(Guid locationId, CancellationToken cancellationToken = default)
   {
     throw new DataException();
   }
 
-  public async Task<Guid> UpdateAsync(Location location, CancellationToken cancellationToken = default)
+  public async Task<Guid> UpdateAsync(Guid locationId, Location newLocation, CancellationToken cancellationToken = default)
   {
     throw new DataException();
   }

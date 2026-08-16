@@ -8,11 +8,11 @@ namespace DirectoryService.Infrastructure.Postgres;
 
 public class DirectoryServiceDbContext : DbContext
 {
-  public DbSet<Department> Department { get; set; }
+  public DbSet<Department> Departments { get; set; }
   
-  public DbSet<Location> Location { get; set; }
+  public DbSet<Location> Locations { get; set; }
   
-  public DbSet<Position> Position { get; set; }
+  public DbSet<Position> Positions { get; set; }
   
   public DbSet<DepartmentLocation> DepartmentLocation { get; set; }
   
