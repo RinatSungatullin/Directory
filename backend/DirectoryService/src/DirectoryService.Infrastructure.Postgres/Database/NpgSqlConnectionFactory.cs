@@ -20,9 +20,9 @@ public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable, IDbConnect
     this._dataSource = dataSourceBuilder.Build();
   }
 
-  public async Task<IDbConnection> AddCreationAsync()
+  public async Task<IDbConnection> AddCreationAsync(CancellationToken cancellationToken = default)
   {
-    return await _dataSource.OpenConnectionAsync();
+    return await _dataSource.OpenConnectionAsync(cancellationToken);
   }
 
   public void Dispose()
