@@ -92,17 +92,17 @@ public class NpgSqlLocationsRepository : ILocationsRepository
 
   public async Task<Location?> GetByIdAsync(Guid locationId, CancellationToken cancellationToken = default)
   {
-    throw new DataException();
+    throw new AggregateException("DAPPER GET BY ID");
   }
 
   public async Task<Guid> UpdateAsync(Guid locationId, Location newLocation, CancellationToken cancellationToken = default)
   {
-    throw new DataException();
+    throw new AggregateException("DAPPER UPDATE");
   }
 
   public async Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken = default)
   {
-    throw new DataException();
+    throw new AggregateException("DAPPER DELETE");
   }
 
   public async Task<Guid?> GetLocationByName(
