@@ -1,4 +1,9 @@
+using System.Data;
+using DirectoryService.Core;
+using DirectoryService.Core.Locations;
 using DirectoryService.Infrastructure.Postgres;
+using DirectoryService.Infrastructure.Postgres.Database;
+using DirectoryService.Infrastructure.Postgres.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -12,8 +17,38 @@ builder.Services.AddHealthChecks();
 
 builder.Services.AddDbContext<DirectoryServiceDbContext>(options =>
 {
-  options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+  options
+    .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+    .UseLoggerFactory(DirectoryServiceDbContext.CreateLoggerFactory());
 });
+
+var defaultRepository = builder.Configuration["DefaultRepository"];
+
+switch (defaultRepository)
+{
+  case "EfCore":
+  {
+    builder.Services.AddScoped<ILocationsRepository, EfCoreLocationsRepository>();
+    break;
+  }
+  case "Dapper":
+  {
+    builder.Services.AddScoped<ILocationsRepository, NpgSqlLocationsRepository>();
+    break;
+  }
+  default:
+  {
+    builder.Services.AddScoped<ILocationsRepository, EfCoreLocationsRepository>();
+    break;
+  }
+}
+
+builder.Services.AddScoped<IDbConnectionFactory, NpgSqlConnectionFactory>();
+
+builder.Services.AddScoped<CreateLocationValidator>();
+
+builder.Services.AddScoped<LocationService>();
+
 
 var app = builder.Build();
 
