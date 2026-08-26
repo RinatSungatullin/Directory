@@ -1,4 +1,5 @@
 using DirectoryService.Contracts.Dtos;
+using DirectoryService.Core.Departments;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DirectoryService.Presenters.Controllers;
@@ -7,6 +8,13 @@ namespace DirectoryService.Presenters.Controllers;
 [Route("[controller]")]
 public class DepartmentController : ControllerBase
 {
+  private readonly DepartmentsService _departmentsService;
+
+  public DepartmentController(DepartmentsService departmentsService)
+  {
+    this._departmentsService = departmentsService;
+  }
+  
   /// <summary>
   /// Создать отдел.
   /// </summary>
@@ -14,19 +22,23 @@ public class DepartmentController : ControllerBase
   /// <returns>Result.</returns>
   [HttpPost]
   public async Task<IActionResult> Create([FromBody] CreateDepartmentDto departmentDto)
-  { 
-    return Ok("department created");
+  {
+    var department = await this._departmentsService.Add(departmentDto);
+    
+    return Ok(department);
   }
 
   /// <summary>
   /// Получить отдел по id.
   /// </summary>
-  /// <param name="positionId">Id позиции.</param>
+  /// <param name="departmentId">Id позиции.</param>
   /// <returns>Result.</returns>
-  [HttpGet("{positionId:guid}")]
-  public async Task<IActionResult> GetById([FromRoute] Guid positionId)
+  [HttpGet("{departmentId:guid}")]
+  public async Task<IActionResult> GetById([FromRoute] Guid departmentId)
   {
-    return Ok("department retrieved");
+    var department = await this._departmentsService.GetById(departmentId);
+    
+    return Ok(department);
   }
 
   /// <summary>

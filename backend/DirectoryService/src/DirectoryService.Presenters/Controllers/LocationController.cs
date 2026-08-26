@@ -24,7 +24,7 @@ public class LocationController : ControllerBase
   [HttpPost]
   public async Task<IActionResult> Create([FromBody] CreateLocationDto locationDto)
   {
-    Guid locationId = await this._locationService.SaveAsync(locationDto);
+    Guid locationId = await this._locationService.Save(locationDto);
     
     return Ok(locationId);
   }
@@ -37,7 +37,9 @@ public class LocationController : ControllerBase
   [HttpGet("{locationId:guid}")]
   public async Task<IActionResult> GetById([FromRoute] Guid locationId)
   {
-    return Ok("location retrieved");
+    var location = await this._locationService.GetById(locationId);
+
+    return Ok(location);
   }
 
   /// <summary>
@@ -47,7 +49,9 @@ public class LocationController : ControllerBase
   [HttpGet]
   public async Task<IActionResult> GetAll()
   {
-    return Ok("locations retrieved");
+    var locations = await this._locationService.GetAll();
+    
+    return Ok(locations);
   }
   
   /// <summary>
@@ -57,7 +61,9 @@ public class LocationController : ControllerBase
   /// <param name="locationDto">Dto локации.</param>
   /// <returns>Result.</returns>
   [HttpPut("{locationId:guid}")]
-  public async Task<IActionResult> Update([FromRoute] Guid locationId, [FromBody] UpdateLocationDto locationDto)
+  public async Task<IActionResult> Update(
+    [FromRoute] Guid locationId,
+    [FromBody] UpdateLocationDto locationDto)
   {
     return Ok("location updated");
   }

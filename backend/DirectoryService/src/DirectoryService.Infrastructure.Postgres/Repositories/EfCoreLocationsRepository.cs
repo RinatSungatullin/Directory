@@ -38,18 +38,12 @@ public class EfCoreLocationsRepository : ILocationsRepository
     return location;
   }
 
-  public async Task<Guid> UpdateAsync(Guid locationId, Location newLocation,
-    CancellationToken cancellationToken = default)
-  {
-    throw new DataException();
-  }
-
   public Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken = default)
   {
     throw new DataException();
   }
 
-  public async Task<Guid?> GetLocationByName(string name, CancellationToken cancellationToken = default)
+  public async Task<Guid?> GetByName(string name, CancellationToken cancellationToken = default)
   {
     var locationId = await this._dbContext.Set<Location>()
       .Where(l => l.Name == name)
@@ -57,5 +51,16 @@ public class EfCoreLocationsRepository : ILocationsRepository
       .FirstOrDefaultAsync(cancellationToken);
 
     return locationId;
+  }
+
+  public async Task<IEnumerable<Location>> GetByIdListAsync(
+    IEnumerable<Guid> locationIds,
+    CancellationToken cancellationToken = default)
+  {
+    List<Location> locations = await this._dbContext.Locations
+      .Where(l => locationIds.Contains(l.Id))
+      .ToListAsync(cancellationToken);
+
+    return locations;
   }
 }

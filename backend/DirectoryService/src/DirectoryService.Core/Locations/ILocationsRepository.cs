@@ -10,9 +10,9 @@ public interface ILocationsRepository
   
   Task<Location?> GetByIdAsync(Guid locationId, CancellationToken cancellationToken = default);
   
-  Task<Guid> UpdateAsync(Guid locationId, Location newLocation, CancellationToken cancellationToken = default);
-  
   Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken = default);
   
-  Task<Guid?> GetLocationByName(string name, CancellationToken cancellationToken = default);
+  Task<Guid?> GetByName(string name, CancellationToken cancellationToken = default);
+  
+  Task <IEnumerable<Location>> GetByIdListAsync(IEnumerable<Guid> locationIds, CancellationToken cancellationToken = default);
 }

@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -20,7 +21,7 @@ public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable, IDbConnect
     this._dataSource = dataSourceBuilder.Build();
   }
 
-  public async Task<IDbConnection> AddCreationAsync(CancellationToken cancellationToken = default)
+  public async Task<DbConnection> AddCreationAsync(CancellationToken cancellationToken = default)
   {
     return await _dataSource.OpenConnectionAsync(cancellationToken);
   }

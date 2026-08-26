@@ -1,5 +1,6 @@
 using System.Data;
 using DirectoryService.Core;
+using DirectoryService.Core.Departments;
 using DirectoryService.Core.Locations;
 using DirectoryService.Infrastructure.Postgres;
 using DirectoryService.Infrastructure.Postgres.Database;
@@ -26,28 +27,28 @@ var defaultRepository = builder.Configuration["DefaultRepository"];
 
 switch (defaultRepository)
 {
-  case "EfCore":
-  {
-    builder.Services.AddScoped<ILocationsRepository, EfCoreLocationsRepository>();
-    break;
-  }
   case "Dapper":
   {
+    builder.Services.AddScoped<IDbConnectionFactory, NpgSqlConnectionFactory>();
     builder.Services.AddScoped<ILocationsRepository, NpgSqlLocationsRepository>();
+    builder.Services.AddScoped<IDepartmentsRepository, EfCoreDepartmentsRepository>();
     break;
   }
   default:
   {
     builder.Services.AddScoped<ILocationsRepository, EfCoreLocationsRepository>();
+    builder.Services.AddScoped<IDepartmentsRepository, EfCoreDepartmentsRepository>();
     break;
   }
 }
 
-builder.Services.AddScoped<IDbConnectionFactory, NpgSqlConnectionFactory>();
-
 builder.Services.AddScoped<CreateLocationValidator>();
 
 builder.Services.AddScoped<LocationService>();
+
+builder.Services.AddScoped<CreateDepartmentValidator>();
+
+builder.Services.AddScoped<DepartmentsService>();
 
 
 var app = builder.Build();

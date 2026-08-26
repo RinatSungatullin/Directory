@@ -4,7 +4,7 @@ namespace DirectoryService.Domain.Departments;
 
 public class Department
 {
-  public Guid Id { get; }
+  public Guid Id { get; private set; }
   
   public string? Name { get; private set; }
   
@@ -26,7 +26,12 @@ public class Department
 
   public IReadOnlyCollection<DepartmentPosition> Positions => _positions;
   
-  public Department(Guid id, string name, string slug, string path, Guid? parentId)
+  public Department(
+    Guid id,
+    string name,
+    string slug,
+    Guid? parentId,
+    string? parentPath)
   { 
     if (string.IsNullOrEmpty(name))
       throw new InvalidDataException( nameof(name));
@@ -40,26 +45,27 @@ public class Department
     {
       throw new ArgumentException("Invalid slug", nameof(slug));
     }
-    
-    if (string.IsNullOrEmpty(path) ||
-        !path.EndsWith($"/{slug}", StringComparison.Ordinal))
-      throw new InvalidDataException( nameof(path));
-    
-    if (parentId.HasValue && parentId.Value == Guid.Empty)
-      throw new InvalidDataException(nameof(parentId));
-    
-    this.Id = id;
-    
+
+    this.Id = id; 
+
     this.Name = name;
-    
+
     this.Slug = slug;
     
-    this.Path = path;
-    
-    this.ParentId = parentId;
+    if (parentId != null)
+    {
+      this.ParentId = parentId;
+
+      this.Path = $"{parentPath}-{slug}";
+    }
+
+    else
+    {
+      this.Path = slug;
+    }
 
     this.CreatedAt = DateTime.UtcNow;
-    
+
     this.UpdatedAt = DateTime.UtcNow;
   }
   
