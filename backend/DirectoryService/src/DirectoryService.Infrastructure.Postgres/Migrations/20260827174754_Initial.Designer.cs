@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DirectoryService.Infrastructure.Postgres.Migrations
 {
     [DbContext(typeof(DirectoryServiceDbContext))]
-    [Migration("20260809083642_Initial")]
+    [Migration("20260827174754_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -89,7 +89,8 @@ namespace DirectoryService.Infrastructure.Postgres.Migrations
                         .HasColumnName("department_id");
 
                     b.Property<bool>("IsPrimary")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_primary");
 
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uuid")

@@ -59,12 +59,14 @@ public class NpgsqlDepartmentsRepository : IDepartmentsRepository
                                                  INSERT INTO department_locations (
                                                      id,
                                                      department_id,
-                                                     location_id
+                                                     location_id,
+                                                     is_primary
                                                  )
                                                  VALUES (
                                                      @Id,
                                                      @DepartmentId,
-                                                     @LocationId
+                                                     @LocationId,
+                                                     @IsPrimary
                                                  );
                                                  """;
       var departmentCommand = new CommandDefinition(
@@ -79,6 +81,7 @@ public class NpgsqlDepartmentsRepository : IDepartmentsRepository
           department.CreatedAt,
           department.UpdatedAt
         },
+        transaction: transaction,
         cancellationToken: cancellationToken);
       
       var departmentLocationCommand = new CommandDefinition(
@@ -124,7 +127,7 @@ public class NpgsqlDepartmentsRepository : IDepartmentsRepository
                            parent_id,
                            created_at,
                            updated_at
-                       FROM locations
+                       FROM departments
                        WHERE id = @Id
                        """;
 

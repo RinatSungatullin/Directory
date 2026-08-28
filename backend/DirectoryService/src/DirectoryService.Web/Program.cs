@@ -31,7 +31,7 @@ switch (defaultRepository)
   {
     builder.Services.AddScoped<IDbConnectionFactory, NpgSqlConnectionFactory>();
     builder.Services.AddScoped<ILocationsRepository, NpgSqlLocationsRepository>();
-    builder.Services.AddScoped<IDepartmentsRepository, EfCoreDepartmentsRepository>();
+    builder.Services.AddScoped<IDepartmentsRepository, NpgsqlDepartmentsRepository>();
     break;
   }
   default:

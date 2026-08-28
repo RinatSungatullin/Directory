@@ -56,7 +56,7 @@ public class Department
     {
       this.ParentId = parentId;
 
-      this.Path = $"{parentPath}-{slug}";
+      this.Path = $"{parentPath}/{slug}";
     }
 
     else

@@ -26,13 +26,13 @@ public class DepartmentsService
     this._createDepartmentValidator = createDepartmentValidator;
   }
   
-  public async Task<Guid> Add(CreateDepartmentDto departmentDto, CancellationToken cancellationToken = default)
+  public async Task<DepartmentDto> Add(CreateDepartmentDto departmentDto, CancellationToken cancellationToken = default)
   {
     var validationResult = await this._createDepartmentValidator.ValidateAsync(departmentDto, cancellationToken);
 
     if (!validationResult.IsValid)
     {
-      throw new DataException("departments not valid");
+      throw new DataException(validationResult.Errors.ToString());
     }
     
     List<Location> locations = (await this._locationsRepository
@@ -79,7 +79,7 @@ public class DepartmentsService
     
     await this._departmentRepository.AddAsync(department, departmentLocations, cancellationToken);
     
-    return  departmentId;
+    return  new DepartmentDto(department.Id, department.Name, department.Slug, department.Path);
   }
 
   public async Task<Department?> GetById(Guid departmentId, CancellationToken cancellationToken = default)
