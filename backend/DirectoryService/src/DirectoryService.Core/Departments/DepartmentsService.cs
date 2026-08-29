@@ -32,7 +32,8 @@ public class DepartmentsService
 
     if (!validationResult.IsValid)
     {
-      throw new DataException(validationResult.Errors.ToString());
+      throw new DataException(string.Join("; ", validationResult.Errors.Select(e=>
+        e.ErrorMessage)));
     }
     
     List<Location> locations = (await this._locationsRepository
@@ -44,7 +45,8 @@ public class DepartmentsService
 
     if (!isValidLocations)
     {
-      throw new DataException("locations not found");
+      throw new DataException(string.Join("; ", validationResult.Errors.Select(e=>
+        e.ErrorMessage)));
     }
 
     Department? parentDepartment = null;
@@ -57,7 +59,8 @@ public class DepartmentsService
 
       if (parentDepartment == null)
       {
-        throw new DataException("parent department not found");
+        throw new DataException(string.Join("; ", validationResult.Errors.Select(e=>
+          e.ErrorMessage)));
       }
     }
     
@@ -79,7 +82,7 @@ public class DepartmentsService
     
     await this._departmentRepository.AddAsync(department, departmentLocations, cancellationToken);
     
-    return  new DepartmentDto(department.Id, department.Name, department.Slug, department.Path);
+    return  new DepartmentDto(department.Id, department.Name!, department.Slug!, department.Path!);
   }
 
   public async Task<Department?> GetById(Guid departmentId, CancellationToken cancellationToken = default)
