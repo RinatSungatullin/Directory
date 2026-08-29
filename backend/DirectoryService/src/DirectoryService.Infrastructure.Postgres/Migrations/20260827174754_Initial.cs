@@ -67,7 +67,7 @@ namespace DirectoryService.Infrastructure.Postgres.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     department_id = table.Column<Guid>(type: "uuid", nullable: false),
                     location_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsPrimary = table.Column<bool>(type: "boolean", nullable: false)
+                    is_primary = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

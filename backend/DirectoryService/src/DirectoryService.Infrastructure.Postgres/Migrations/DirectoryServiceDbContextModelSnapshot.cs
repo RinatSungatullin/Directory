@@ -86,7 +86,8 @@ namespace DirectoryService.Infrastructure.Postgres.Migrations
                         .HasColumnName("department_id");
 
                     b.Property<bool>("IsPrimary")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_primary");
 
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uuid")

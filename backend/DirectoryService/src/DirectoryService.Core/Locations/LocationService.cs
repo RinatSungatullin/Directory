@@ -19,7 +19,7 @@ public class LocationService
     this._createLocationValidator = createLocationValidator;
   }
 
-  public async Task<Guid> SaveAsync(CreateLocationDto locationDto)
+  public async Task<Guid> Save(CreateLocationDto locationDto)
   {
     var validationResult = await this._createLocationValidator.ValidateAsync(locationDto);
 
@@ -28,7 +28,7 @@ public class LocationService
       throw new ValidationException(validationResult.Errors.ToString());
     }
     
-    Guid? existsLocation = await this._locationsRepository.GetLocationByName(locationDto.Name);
+    Guid? existsLocation = await this._locationsRepository.GetByName(locationDto.Name);
 
     if (existsLocation.HasValue)
     {
@@ -47,5 +47,19 @@ public class LocationService
     await this._locationsRepository.AddAsync(location);
     
     return newLocationId;
+  }
+
+  public async Task<IEnumerable<Location>> GetAll(CancellationToken cancellationToken = default)
+  {
+    List<Location> locations = (await this._locationsRepository.GetAllAsync(cancellationToken)).ToList();
+    
+    return locations;
+  }
+
+  public async Task<Location?> GetById(Guid locationId, CancellationToken cancellationToken = default)
+  {
+    var location = await this._locationsRepository.GetByIdAsync(locationId, cancellationToken);
+    
+    return location;
   }
 }

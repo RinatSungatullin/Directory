@@ -15,11 +15,15 @@ public class NpgSqlLocationsRepository : ILocationsRepository
     this._connectionFactory = factory;
   }
   
+  /// <summary>
+  /// Добавить локацию.
+  /// </summary>
+  /// <param name="location">Локация.</param>
+  /// <param name="cancellationToken">Cancellation token.</param>
+  /// <returns>Id добавленной локации.</returns>
   public async Task<Guid> AddAsync(Location location, CancellationToken cancellationToken = default)
   {
     using var connection = await this._connectionFactory.AddCreationAsync(cancellationToken);
-
-    
     
     const string locationInsertSql = """
                                      INSERT INTO locations (
@@ -90,14 +94,40 @@ public class NpgSqlLocationsRepository : ILocationsRepository
     return await connection.QueryAsync<Location>(command);
   }
 
+  /// <summary>
+  /// Получить локацию по id.
+  /// </summary>
+  /// <param name="locationId">Id локациию</param>
+  /// <param name="cancellationToken">Cancellation token.</param>
+  /// <returns>Локация.</returns>
   public async Task<Location?> GetByIdAsync(Guid locationId, CancellationToken cancellationToken = default)
   {
-    throw new AggregateException("DAPPER GET BY ID");
-  }
+    using var connection =
+      await _connectionFactory.AddCreationAsync(cancellationToken);
 
-  public async Task<Guid> UpdateAsync(Guid locationId, Location newLocation, CancellationToken cancellationToken = default)
-  {
-    throw new AggregateException("DAPPER UPDATE");
+    const string sql = """
+                       SELECT
+                           id,
+                           name,
+                           city,
+                           street,
+                           building,
+                           office_number,
+                           created_at,
+                           updated_at
+                       FROM locations
+                       WHERE id = @Id
+                       """;
+
+    var command = new CommandDefinition(
+      sql,
+      new
+      {
+        Id = locationId
+      },
+      cancellationToken: cancellationToken);
+    
+    return await connection.QuerySingleOrDefaultAsync<Location>(command);
   }
 
   public async Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken = default)
@@ -105,7 +135,13 @@ public class NpgSqlLocationsRepository : ILocationsRepository
     throw new AggregateException("DAPPER DELETE");
   }
 
-  public async Task<Guid?> GetLocationByName(
+  /// <summary>
+  /// Получить лакацию по наименованию.
+  /// </summary>
+  /// <param name="name">Имя локации.</param>
+  /// <param name="cancellationToken">Cancellation token.</param>
+  /// <returns>Локация.</returns>
+  public async Task<Guid?> GetByName(
     string name,
     CancellationToken cancellationToken = default)
   {
@@ -124,5 +160,18 @@ public class NpgSqlLocationsRepository : ILocationsRepository
       cancellationToken: cancellationToken);
 
     return await connection.QuerySingleOrDefaultAsync<Guid?>(command);
+  }
+
+  public async Task<IEnumerable<Location>> GetByIdListAsync(IEnumerable<Guid> locationIds, CancellationToken cancellationToken = default)
+  {
+    using var connection = await _connectionFactory.AddCreationAsync(cancellationToken);
+    
+    const string sql = """
+                       SELECT id, name
+                       FROM locations
+                       WHERE id = ANY(@LocationIds);
+                       """;
+    
+    return await connection.QueryAsync<Location>(sql, new {LocationIds = locationIds});
   }
 }
