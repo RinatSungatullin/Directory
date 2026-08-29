@@ -45,8 +45,7 @@ public class DepartmentsService
 
     if (!isValidLocations)
     {
-      throw new DataException(string.Join("; ", validationResult.Errors.Select(e=>
-        e.ErrorMessage)));
+      throw new DataException("locations not found");
     }
 
     Department? parentDepartment = null;
@@ -59,8 +58,7 @@ public class DepartmentsService
 
       if (parentDepartment == null)
       {
-        throw new DataException(string.Join("; ", validationResult.Errors.Select(e=>
-          e.ErrorMessage)));
+        throw new DataException("parent department not found");
       }
     }
     
