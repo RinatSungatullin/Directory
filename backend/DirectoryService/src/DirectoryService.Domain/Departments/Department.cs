@@ -70,7 +70,42 @@ public class Department
   }
   
   private Department()
+  { }
+
+  /// <summary>
+  /// Обновить название.
+  /// </summary>
+  /// <param name="name">Новое название.</param>
+  /// <exception cref="InvalidDataException">Некорректное название.</exception>
+  public void UpdateName(string name)
   {
+    if (string.IsNullOrEmpty(name))
+      throw new InvalidDataException("name");
     
+    this.Name = name;
+    
+    this.UpdatedAt = DateTime.UtcNow;
+  }
+
+  /// <summary>
+  /// Обновить slug.
+  /// </summary>
+  /// <param name="slug">Slug.</param>
+  /// <exception cref="ArgumentException">Некорректный формат slug.</exception>
+  public void UpdateSlug(string slug)
+  {
+    if (string.IsNullOrEmpty(slug) ||
+        !Regex.IsMatch(
+          slug,
+          @"^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          RegexOptions.None,
+          TimeSpan.FromMilliseconds(100)))
+    {
+      throw new ArgumentException("Invalid slug", nameof(slug));
+    }
+
+    this.Slug = slug;
+    
+    this.UpdatedAt = DateTime.UtcNow;
   }
 }

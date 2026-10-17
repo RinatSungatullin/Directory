@@ -1,5 +1,6 @@
 using DirectoryService.Contracts.Dtos;
 using DirectoryService.Core.Departments;
+using DirectoryService.Domain.Departments;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DirectoryService.Presenters.Controllers;
@@ -42,25 +43,15 @@ public class DepartmentController : ControllerBase
   }
 
   /// <summary>
-  /// Полуичть все позиции.
+  /// Получить все отделы.
   /// </summary>
-  /// <returns>Result.</returns>
+  /// <returns>Список отделов.</returns>
   [HttpGet]
   public async Task<IActionResult> GetAll()
   {
-    return Ok("departments retrieved");
-  }
-
-  /// <summary>
-  /// Обновить отдел.
-  /// </summary>
-  /// <param name="departmentId">Id отдела.</param>
-  /// <param name="departmentDto">Dto отдела.</param>
-  /// <returns>Result.</returns>
-  [HttpPut("{departmentId:guid}")]
-  public async Task<IActionResult> Update([FromRoute] Guid departmentId, [FromBody] UpdateDepartmentDto departmentDto)
-  {
-    return Ok("department updated");
+    var departments = (await this._departmentsService.GetAll()).ToList();
+    
+    return Ok(departments);
   }
 
   /// <summary>
@@ -71,6 +62,72 @@ public class DepartmentController : ControllerBase
   [HttpDelete("{departmentId:guid}")]
   public async Task<IActionResult> Delete([FromRoute] Guid departmentId)
   {
-    return Ok("department deleted");
+    var department = await this._departmentsService.Delete(departmentId);
+    
+    return Ok(department);
+  }
+
+  /// <summary>
+  /// Удалить связь отдела с локацией.
+  /// </summary>
+  /// <param name="departmentId">Id отдела.</param>
+  /// <param name="locationId"></param>
+  /// <returns>Result.</returns>
+  [HttpDelete("departments/{departmentId:guid}/locations/{locationId:guid}")]
+  public async Task<IActionResult> DeleteDepartmentLocationAsync(
+    [FromRoute] Guid departmentId,
+    [FromRoute] Guid locationId)
+  {
+    var departmentLocation = await this._departmentsService
+      .DeleteDepartmentLocation(departmentId, locationId);
+
+    return Ok(departmentLocation);
+  }
+
+  /// <summary>
+  /// Обновить название.
+  /// </summary>
+  /// <param name="departmentId">Id отдела.</param>
+  /// <param name="name">Новое название.</param>
+  /// <returns>Dto отдела.</returns>
+  [HttpPatch("/departments/update-name/{departmentId:guid}/{name}")]
+  public async Task<IActionResult> UpdateName(
+    [FromRoute] Guid departmentId,
+    [FromRoute] string name)
+  {
+    var department = await this._departmentsService.UpdateName(departmentId, name);
+    
+    return Ok(department);
+  }
+  
+  /// <summary>
+  /// Обновить slug.
+  /// </summary>
+  /// <param name="departmentId">Id отдела.</param>
+  /// <param name="slug">Slug.</param>
+  /// <returns>Dto отдела.</returns>
+  [HttpPatch("/departments/update-slug/{departmentId:guid}/{slug}")]
+  public async Task<IActionResult> UpdateSlug([FromRoute] Guid departmentId, [FromRoute] string slug)
+  {
+    var department = await this._departmentsService.UpdateSlug(departmentId, slug);
+    
+    return Ok(department);
+  }
+
+  /// <summary>
+  /// Добавить связь локации с подразделением.
+  /// </summary>
+  /// <param name="departmentId">Id подразделения.</param>
+  /// <param name="locationId">Id локации.</param>
+  /// <returns>Dto связи.</returns>
+  [HttpPost("departments/{departmentId}/locations/{locationId}")]
+  public async Task<IActionResult> AddDepartmentLocationAsync(
+    [FromRoute] Guid departmentId,
+    [FromRoute] Guid locationId)
+  {
+    var departmentLocationId = await this._departmentsService
+      .AddDepartmentLocation(departmentId, locationId);
+    
+    return Ok(departmentLocationId);
   }
 }

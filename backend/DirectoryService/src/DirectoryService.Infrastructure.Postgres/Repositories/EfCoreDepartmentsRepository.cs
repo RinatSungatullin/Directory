@@ -40,9 +40,11 @@ public class EfCoreDepartmentsRepository : IDepartmentsRepository
     }
   }
 
-  public Task<IEnumerable<Department>> GetAllAsync(CancellationToken cancellationToken = default)
+  public async Task<IEnumerable<Department>> GetAllAsync(CancellationToken cancellationToken = default)
   {
-    throw new DataException();
+    List<Department> departments = await this._dbContext.Departments.ToListAsync(cancellationToken);
+
+    return departments;
   }
 
   public async Task<Department?> GetByIdAsync(Guid? departmentId, CancellationToken cancellationToken = default)
@@ -53,8 +55,62 @@ public class EfCoreDepartmentsRepository : IDepartmentsRepository
     return department;
   }
 
-  public Task<Guid> DeleteAsync(Guid departmentId, CancellationToken cancellationToken = default)
+  public async Task<Guid> UpdateAsync(
+    Department department,
+    CancellationToken cancellationToken = default)
   {
-    throw new DataException();
+    this._dbContext.Update(department);
+    
+    await this._dbContext.SaveChangesAsync(cancellationToken);
+    
+    return department.Id;
   }
+
+  public async Task<Guid> DeleteAsync(Guid departmentId, CancellationToken cancellationToken = default)
+  {
+    await this._dbContext.Departments
+      .Where(d => d.Id == departmentId)
+      .ExecuteDeleteAsync(cancellationToken);
+    
+    return departmentId;
+  }
+
+  public async Task<DepartmentLocation?> GetDepartmentLocationByDepartmentIdAndLocationIdAsync(
+    Guid departmentId,
+    Guid locationId,
+    CancellationToken cancellationToken = default)
+  {
+    DepartmentLocation? departmentLocation = await this._dbContext.DepartmentLocation
+      .FirstOrDefaultAsync(
+        dl => dl.DepartmentId == departmentId  && dl.LocationId == locationId,
+        cancellationToken);
+
+    return departmentLocation;
+  }
+
+
+  public async Task<Guid> DeleteDepartmentLocationAsync(
+    Guid departmentLocationId,
+    CancellationToken cancellationToken = default)
+  {
+    await this._dbContext.DepartmentLocation
+      .Where(x => x.Id == departmentLocationId)
+      .ExecuteDeleteAsync(cancellationToken);
+    
+    await this._dbContext.SaveChangesAsync(cancellationToken);
+    
+    return departmentLocationId;
+  }
+  
+  public async Task<Guid> AddDepartmentLocationAsync(
+    DepartmentLocation departmentLocation,
+    CancellationToken cancellationToken = default)
+  {
+    await this._dbContext.AddAsync(departmentLocation, cancellationToken);
+    
+    await this._dbContext.SaveChangesAsync(cancellationToken);
+    
+    return departmentLocation.Id;
+  }
+  
 }

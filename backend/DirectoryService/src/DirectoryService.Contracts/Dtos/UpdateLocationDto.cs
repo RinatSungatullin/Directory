@@ -1,3 +1,3 @@
 namespace DirectoryService.Contracts.Dtos;
 
-public record UpdateLocationDto(string Name, string Address);
+public record UpdateLocationDto(Guid Id, UpdateAddressDto Address);

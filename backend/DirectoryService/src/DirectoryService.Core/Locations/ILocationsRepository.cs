@@ -14,5 +14,9 @@ public interface ILocationsRepository
   
   Task<Guid?> GetByName(string name, CancellationToken cancellationToken = default);
   
-  Task <IEnumerable<Location>> GetByIdListAsync(IEnumerable<Guid> locationIds, CancellationToken cancellationToken = default);
+  Task <IEnumerable<Location>> GetByIdListAsync(
+    IEnumerable<Guid> locationIds,
+    CancellationToken cancellationToken = default);
+  
+  Task<Guid> UpdateAsync(Location location, CancellationToken cancellationToken = default);
 }

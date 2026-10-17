@@ -12,4 +12,17 @@ public interface IDepartmentsRepository
   Task<Department?> GetByIdAsync(Guid? departmentId, CancellationToken cancellationToken = default);
   
   Task<Guid> DeleteAsync(Guid departmentId, CancellationToken cancellationToken = default);
+  
+  Task<DepartmentLocation?> GetDepartmentLocationByDepartmentIdAndLocationIdAsync(
+    Guid departmentId, Guid locationId, CancellationToken cancellationToken = default);
+  
+  Task<Guid> DeleteDepartmentLocationAsync(
+    Guid departmentLocationId,
+    CancellationToken cancellationToken = default);
+
+  Task<Guid> UpdateAsync(Department department, CancellationToken cancellationToken = default);
+
+  Task<Guid> AddDepartmentLocationAsync(
+    DepartmentLocation departmentLocation,
+    CancellationToken cancellationToken = default);
 }
