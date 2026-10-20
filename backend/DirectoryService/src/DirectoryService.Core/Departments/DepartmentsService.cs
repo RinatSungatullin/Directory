@@ -189,20 +189,23 @@ public class DepartmentsService
   /// <param name="departmentId">Id подразделения.</param>
   /// <param name="locationId">Id локации.</param>
   /// <returns>Id связи локации с подразделением.</returns>
-  public async Task<Guid> AddDepartmentLocation(Guid departmentId, Guid locationId)
+  public async Task<Guid> AddDepartmentLocation(
+    Guid departmentId,
+    Guid locationId,
+    CancellationToken cancellationToken = default)
   {
     var departmentLocationQuery = await this._departmentRepository
-      .GetDepartmentLocationByDepartmentIdAndLocationIdAsync(departmentId, locationId);
+      .GetDepartmentLocationByDepartmentIdAndLocationIdAsync(departmentId, locationId, cancellationToken);
     
     if (departmentLocationQuery != null)
       throw new DataException("departmentLocation already exists");
     
-    var location = await this._locationsRepository.GetByIdAsync(locationId);
+    var location = await this._locationsRepository.GetByIdAsync(locationId, cancellationToken);
     
     if (location == null)
       throw new DataException("location not found");
     
-    var department = await this._departmentRepository.GetByIdAsync(departmentId);
+    var department = await this._departmentRepository.GetByIdAsync(departmentId, cancellationToken);
     
     if (department == null)
       throw new DataException("department not found");
@@ -213,7 +216,7 @@ public class DepartmentsService
       locationId,
       false);
     
-    await this._departmentRepository.AddDepartmentLocationAsync(departmentLocation);
+    await this._departmentRepository.AddDepartmentLocationAsync(departmentLocation, cancellationToken);
     
     return departmentLocation.Id;
   }

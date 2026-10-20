@@ -59,8 +59,6 @@ public class EfCoreDepartmentsRepository : IDepartmentsRepository
     Department department,
     CancellationToken cancellationToken = default)
   {
-    this._dbContext.Update(department);
-    
     await this._dbContext.SaveChangesAsync(cancellationToken);
     
     return department.Id;

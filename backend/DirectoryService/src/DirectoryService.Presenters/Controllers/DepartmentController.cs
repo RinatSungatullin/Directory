@@ -73,7 +73,7 @@ public class DepartmentController : ControllerBase
   /// <param name="departmentId">Id отдела.</param>
   /// <param name="locationId"></param>
   /// <returns>Result.</returns>
-  [HttpDelete("departments/{departmentId:guid}/locations/{locationId:guid}")]
+  [HttpDelete("{departmentId:guid}/locations/{locationId:guid}")]
   public async Task<IActionResult> DeleteDepartmentLocationAsync(
     [FromRoute] Guid departmentId,
     [FromRoute] Guid locationId)
@@ -90,7 +90,7 @@ public class DepartmentController : ControllerBase
   /// <param name="departmentId">Id отдела.</param>
   /// <param name="name">Новое название.</param>
   /// <returns>Dto отдела.</returns>
-  [HttpPatch("/departments/update-name/{departmentId:guid}/{name}")]
+  [HttpPatch("update-name/{departmentId:guid}/{name}")]
   public async Task<IActionResult> UpdateName(
     [FromRoute] Guid departmentId,
     [FromRoute] string name)
@@ -106,7 +106,7 @@ public class DepartmentController : ControllerBase
   /// <param name="departmentId">Id отдела.</param>
   /// <param name="slug">Slug.</param>
   /// <returns>Dto отдела.</returns>
-  [HttpPatch("/departments/update-slug/{departmentId:guid}/{slug}")]
+  [HttpPatch("update-slug/{departmentId:guid}/{slug}")]
   public async Task<IActionResult> UpdateSlug([FromRoute] Guid departmentId, [FromRoute] string slug)
   {
     var department = await this._departmentsService.UpdateSlug(departmentId, slug);
@@ -120,7 +120,7 @@ public class DepartmentController : ControllerBase
   /// <param name="departmentId">Id подразделения.</param>
   /// <param name="locationId">Id локации.</param>
   /// <returns>Dto связи.</returns>
-  [HttpPost("departments/{departmentId}/locations/{locationId}")]
+  [HttpPost("{departmentId}/locations/{locationId}")]
   public async Task<IActionResult> AddDepartmentLocationAsync(
     [FromRoute] Guid departmentId,
     [FromRoute] Guid locationId)
