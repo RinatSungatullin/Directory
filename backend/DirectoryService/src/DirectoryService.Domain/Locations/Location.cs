@@ -34,4 +34,21 @@ public class Location
   }
   public Location()
   { }
+  
+  public void UpdateName(string name)
+  {
+    if (string.IsNullOrEmpty(name))
+      throw new InvalidDataException(nameof(name));
+    
+    this.Name = name;
+    
+    this.UpdatedAt = DateTime.UtcNow;
+  }
+
+  public void UpdateAddress(Address address)
+  {
+    this.Address = address;
+    
+    this.UpdatedAt = DateTime.UtcNow;
+  }
 }

@@ -1,6 +1,7 @@
 using DirectoryService.Contracts.Dtos;
 using DirectoryService.Core;
 using DirectoryService.Core.Locations;
+using DirectoryService.Domain.Addresses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DirectoryService.Presenters.Controllers;
@@ -24,9 +25,9 @@ public class LocationController : ControllerBase
   [HttpPost]
   public async Task<IActionResult> Create([FromBody] CreateLocationDto locationDto)
   {
-    Guid locationId = await this._locationService.Save(locationDto);
+    var location = await this._locationService.Add(locationDto);
     
-    return Ok(locationId);
+    return Ok(location);
   }
 
   /// <summary>
@@ -53,20 +54,6 @@ public class LocationController : ControllerBase
     
     return Ok(locations);
   }
-  
-  /// <summary>
-  /// Обновить локацию.
-  /// </summary>
-  /// <param name="locationId">Id локации.</param>
-  /// <param name="locationDto">Dto локации.</param>
-  /// <returns>Result.</returns>
-  [HttpPut("{locationId:guid}")]
-  public async Task<IActionResult> Update(
-    [FromRoute] Guid locationId,
-    [FromBody] UpdateLocationDto locationDto)
-  {
-    return Ok("location updated");
-  }
 
   /// <summary>
   /// Удалить локацию.
@@ -76,6 +63,35 @@ public class LocationController : ControllerBase
   [HttpDelete("{locationId:guid}")]
   public async Task<IActionResult> Delete([FromRoute] Guid locationId)
   {
-    return Ok("location deleted");
+    var location = await this._locationService.Delete(locationId);
+    
+    return Ok(location);
+  }
+
+  /// <summary>
+  /// Обновить название.
+  /// </summary>
+  /// <param name="locationId">Id локации.</param>
+  /// <param name="name">Новое наименование.</param>
+  /// <returns>Dto локации.</returns>
+  [HttpPatch("locations/update-name/{locationId:guid}/{name}")]
+  public async Task<IActionResult> UpdateName([FromRoute] Guid locationId, [FromRoute] string name)
+  {
+    var location = await this._locationService.UpdateName(locationId, name)!;
+    
+    return Ok(location);
+  }
+
+  /// <summary>
+  /// Обновить адрес локации.
+  /// </summary>
+  /// <param name="addressDto">Dto адреса.</param>
+  /// <returns>Dto обновленной локации.</returns>
+  [HttpPatch("locations/update-address/")]
+  public async Task<IActionResult> UpdateAddress([FromBody] UpdateAddressDto addressDto)
+  {
+    var location = await this._locationService.UpdateAddress(addressDto);
+    
+    return Ok(location);
   }
 }

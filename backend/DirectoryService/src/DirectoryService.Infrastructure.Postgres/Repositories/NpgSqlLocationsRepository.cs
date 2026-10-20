@@ -1,6 +1,7 @@
 using System.Data;
 using Dapper;
 using DirectoryService.Core.Locations;
+using DirectoryService.Domain.Addresses;
 using DirectoryService.Domain.Locations;
 using DirectoryService.Infrastructure.Postgres.Database;
 
@@ -68,6 +69,11 @@ public class NpgSqlLocationsRepository : ILocationsRepository
     return location.Id;
   }
 
+  /// <summary>
+  ///  Получить все локации.
+  /// </summary>
+  /// <param name="cancellationToken">Cancellation token.</param>
+  /// <returns>Список локаций.</returns>
   public async Task<IEnumerable<Location>> GetAllAsync(
     CancellationToken cancellationToken = default)
   {
@@ -78,12 +84,14 @@ public class NpgSqlLocationsRepository : ILocationsRepository
                        SELECT
                            id,
                            name,
-                           city,
-                           street,
-                           building,
-                           office_number,
-                           created_at,
-                           updated_at
+                           created_at AS CreatedAt,
+                           updated_at AS UpdatedAt,
+                           
+                           city AS City,
+                           street AS Street,
+                           building AS Building,
+                           office_number AS OfficeNumber
+                           
                        FROM locations
                        """;
 
@@ -91,13 +99,21 @@ public class NpgSqlLocationsRepository : ILocationsRepository
       sql,
       cancellationToken: cancellationToken);
 
-    return await connection.QueryAsync<Location>(command);
+    return await connection.QueryAsync<Location, Address, Location>(
+      command,
+      (location, address) =>
+      {
+        location.UpdateAddress(address);
+
+        return location;
+      },
+      splitOn: "city");
   }
 
   /// <summary>
   /// Получить локацию по id.
   /// </summary>
-  /// <param name="locationId">Id локациию</param>
+  /// <param name="locationId">Id локациию.</param>
   /// <param name="cancellationToken">Cancellation token.</param>
   /// <returns>Локация.</returns>
   public async Task<Location?> GetByIdAsync(Guid locationId, CancellationToken cancellationToken = default)
@@ -109,12 +125,50 @@ public class NpgSqlLocationsRepository : ILocationsRepository
                        SELECT
                            id,
                            name,
-                           city,
-                           street,
-                           building,
-                           office_number,
-                           created_at,
-                           updated_at
+                           created_at AS CreatedAt,
+                           updated_at AS UpdatedAt,
+                           city AS City,
+                           street AS Street,
+                           building AS Building,
+                           office_number AS OfficeNumber
+                           
+                       FROM locations
+                       WHERE id = @Id
+                       """;
+
+    var command = new CommandDefinition(
+      sql,
+      new
+      {
+        Id = locationId
+      },
+      cancellationToken: cancellationToken);
+
+    var locations = await connection.QueryAsync<Location, Address, Location>(
+      command,
+      (location, address) =>
+      {
+        location.UpdateAddress(address);
+        return location;
+      },
+      splitOn: "City");
+
+    return locations.FirstOrDefault();
+  }
+
+  /// <summary>
+  /// Удалить локацию.
+  /// </summary>
+  /// <param name="locationId">Id локации.</param>
+  /// <param name="cancellationToken">Cancellation token.</param>
+  /// <returns>Id локации.</returns>
+  public async Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken = default)
+  {
+    using var connection = 
+      await _connectionFactory.AddCreationAsync(cancellationToken);
+
+    const string sql = """
+                       DELETE
                        FROM locations
                        WHERE id = @Id
                        """;
@@ -127,12 +181,9 @@ public class NpgSqlLocationsRepository : ILocationsRepository
       },
       cancellationToken: cancellationToken);
     
-    return await connection.QuerySingleOrDefaultAsync<Location>(command);
-  }
-
-  public async Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken = default)
-  {
-    throw new AggregateException("DAPPER DELETE");
+    await connection.ExecuteAsync(command);
+    
+    return locationId;
   }
 
   /// <summary>
@@ -162,6 +213,12 @@ public class NpgSqlLocationsRepository : ILocationsRepository
     return await connection.QuerySingleOrDefaultAsync<Guid?>(command);
   }
 
+  /// <summary>
+  /// Получить коллекцию локаций по коллекции id.
+  /// </summary>
+  /// <param name="locationIds">Коллекция id.</param>
+  /// <param name="cancellationToken">Cancellation token.</param>
+  /// <returns>Локации.</returns>
   public async Task<IEnumerable<Location>> GetByIdListAsync(IEnumerable<Guid> locationIds, CancellationToken cancellationToken = default)
   {
     using var connection = await _connectionFactory.AddCreationAsync(cancellationToken);
@@ -173,5 +230,44 @@ public class NpgSqlLocationsRepository : ILocationsRepository
                        """;
     
     return await connection.QueryAsync<Location>(sql, new {LocationIds = locationIds});
+  }
+
+  /// <summary>
+  /// Обновить локацию.
+  /// </summary>
+  /// <param name="location">Локация.</param>
+  /// <param name="cancellationToken">Cancellation token.</param>
+  /// <returns>Id локации.</returns>
+  public async Task<Guid> UpdateAsync(Location location, CancellationToken cancellationToken = default)
+  {
+    using var connection =
+      await _connectionFactory.AddCreationAsync(cancellationToken);
+    
+    const string sql = """
+                       UPDATE locations
+                       SET name = @LocationName,
+                           city = @LocationCity,
+                           street = @LocationStreet,
+                           building = @LocationBuilding,
+                           office_number = @LocationOfficeNumber
+                       WHERE id = @LocationId
+                       """;
+    
+    var command = new CommandDefinition(
+      sql,
+      new
+      {
+        LocationName = location.Name,
+        LocationCity = location.Address.City,
+        LocationStreet = location.Address.Street,
+        LocationBuilding = location.Address.Building,
+        LocationOfficeNumber = location.Address.OfficeNumber,
+        LocationId = location.Id
+      },
+      cancellationToken: cancellationToken);
+      
+    await connection.ExecuteAsync(command);
+    
+    return location.Id;
   }
 }

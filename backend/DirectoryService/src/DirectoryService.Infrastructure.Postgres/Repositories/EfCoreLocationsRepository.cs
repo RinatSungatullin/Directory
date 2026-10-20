@@ -63,4 +63,11 @@ public class EfCoreLocationsRepository : ILocationsRepository
 
     return locations;
   }
+
+  public async Task<Guid> UpdateAsync(Location location, CancellationToken cancellationToken = default)
+  {
+    await this._dbContext.SaveChangesAsync(cancellationToken);
+    
+    return location.Id;
+  }
 }
